@@ -18,9 +18,16 @@
 			"PATH": "${env:PATH}"
 		},
 		"cSpell.words": [
+			"CALMAIN",
 			"chcp",
 			"CNYRUB",
 			"HKDRUB",
+			"Holliday",
+			"KGSRUB",
+			"KGSRUBTODTOM",
+			"KZTRUBTDSTMS",
+			"TDSTMS",
+			"TODTOM",
 			"USDRUB",
 			"xmlfiles"
 		],
