@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "py_project"
+		},
+		{
+			"path": "go_project"
+		},
+		{
+			"path": "rust_project"
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.windows": {
+			"PATH": "${env:PATH}"
+		},
+		"cSpell.words": [
+			"chcp",
+			"CNYRUB",
+			"HKDRUB",
+			"USDRUB",
+			"xmlfiles"
+		],
+	}
+}

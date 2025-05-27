@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<?xml-stylesheet type="text/xsl" href="C:\MICEX\XSLT\CUX50.xslt"?>
+<?xml-stylesheet type="text/xsl" href="C:\MICEX\XSLT\CUX50_ENG.xslt"?>
+<MICEX_DOC xsi:noNamespaceSchemaLocation="C:\MICEX\XSD\CUX50.xsd"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" StartDate="2023-03-01" EndDate="2023-03-31">
+	<DOC_REQUISITES/>
+	<CUX50 ReportDate="2023-03-08">
+		<GROUP TradeGroup="H" DescribeGroup="">
+			<SECURITY SecurityId="CALMAIN" SecShortName="" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2023-03-20">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="KGSRUBTODTOM" SecShortName="KGS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="KGSRUB_TOD" SecShortName="KGSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUBTODTOM" SecShortName="TJS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUB_TOD" SecShortName="TJSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGSTODTOM" SecShortName="USDKGSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGS_TOD" SecShortName="USDKGS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUBTODTOM" SecShortName="UZS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUB_TOD" SecShortName="UZSRUB_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2023-03-21">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="KGSRUBTODTOM" SecShortName="KGS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="KGSRUB_TOD" SecShortName="KGSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUBTDSTMS" SecShortName="KZT_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUBTODTOM" SecShortName="KZT_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TDS" SecShortName="KZTRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TOD" SecShortName="KZTRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUBTODTOM" SecShortName="TJS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUB_TOD" SecShortName="TJSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGSTODTOM" SecShortName="USDKGSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGS_TOD" SecShortName="USDKGS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZTTODTOM" SecShortName="USDKZTTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZT_TOD" SecShortName="USDKZT_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDZARTODTOM" SecShortName="USDZARTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDZAR_TOD" SecShortName="USDZAR_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUBTODTOM" SecShortName="UZS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUB_TOD" SecShortName="UZSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="ZARRUBTDSTMS" SecShortName="ZAR_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="ZARRUBTODTOM" SecShortName="ZAR_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="ZARRUB_TDS" SecShortName="ZARRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="ZARRUB_TOD" SecShortName="ZARRUB_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2023-03-22">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="KZTRUBTDSTMS" SecShortName="KZT_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUBTODTOM" SecShortName="KZT_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TDS" SecShortName="KZTRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TOD" SecShortName="KZTRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUBTODTOM" SecShortName="TJS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUB_TOD" SecShortName="TJSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZTTODTOM" SecShortName="USDKZTTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZT_TOD" SecShortName="USDKZT_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUBTODTOM" SecShortName="UZS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="UZSRUB_TOD" SecShortName="UZSRUB_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2023-03-23">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="KZTRUBTDSTMS" SecShortName="KZT_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUBTODTOM" SecShortName="KZT_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TDS" SecShortName="KZTRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="KZTRUB_TOD" SecShortName="KZTRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUBTODTOM" SecShortName="TJS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUB_TOD" SecShortName="TJSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZTTODTOM" SecShortName="USDKZTTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZT_TOD" SecShortName="USDKZT_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2023-03-24">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="TJSRUBTODTOM" SecShortName="TJS_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="TJSRUB_TOD" SecShortName="TJSRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+</MICEX_DOC>

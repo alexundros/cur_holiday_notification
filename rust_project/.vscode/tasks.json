@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "rust_project: clean",
+            "type": "shell",
+            "command": "cargo",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "args": [
+                "clean",
+            ]
+        },
+        {
+            "label": "rust_project: build",
+            "type": "shell",
+            "command": "cargo",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "args": [
+                "build",
+                "--release"
+            ]
+        },
+        {
+            "label": "rust_project: test build",
+            "type": "shell",
+            "command": "${workspaceFolder}/target/release/rust_project.exe",
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "test_xmlfiles/0230301-20230331.xml",
+            ],
+        }
+    ]
+}

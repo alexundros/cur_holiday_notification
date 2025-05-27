@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<?xml-stylesheet type="text/xsl" href="C:\MICEX\XSLT\CUX50.xslt"?>
+<?xml-stylesheet type="text/xsl" href="C:\MICEX\XSLT\CUX50_ENG.xslt"?>
+<MICEX_DOC xsi:noNamespaceSchemaLocation="C:\MICEX\XSD\CUX50.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" StartDate="2024-02-01" EndDate="2024-02-29">
+	<DOC_REQUISITES/>
+	<CUX50 ReportDate="2024-02-02">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNYRUB_TOM1W" SecShortName="CNY_TOM1W" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-12">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNY000000TOD" SecShortName="CNYRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTDSTMS" SecShortName="CNY_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTODTOM" SecShortName="CNY_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUB_TDS" SecShortName="CNYRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUBTDSTMS" SecShortName="HKD_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUBTODTOM" SecShortName="HKD_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUB_TDS" SecShortName="HKDRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUB_TOD" SecShortName="HKDRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKDTODTOM" SecShortName="USDHKDTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKD_TOD" SecShortName="USDHKD_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-13">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNY000000TOD" SecShortName="CNYRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTDSTMS" SecShortName="CNY_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTODTOM" SecShortName="CNY_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUB_TDS" SecShortName="CNYRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUBTDSTMS" SecShortName="HKD_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUBTODTOM" SecShortName="HKD_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUB_TDS" SecShortName="HKDRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="HKDRUB_TOD" SecShortName="HKDRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKDTODTOM" SecShortName="USDHKDTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKD_TOD" SecShortName="USDHKD_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-14">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNY000000TOD" SecShortName="CNYRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTDSTMS" SecShortName="CNY_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTODTOM" SecShortName="CNY_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUB_TDS" SecShortName="CNYRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-15">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNY000000TOD" SecShortName="CNYRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTDSTMS" SecShortName="CNY_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTODTOM" SecShortName="CNY_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUB_TDS" SecShortName="CNYRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-16">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="CNY000000TOD" SecShortName="CNYRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTDSTMS" SecShortName="CNY_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUBTODTOM" SecShortName="CNY_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="CNYRUB_TDS" SecShortName="CNYRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-19">
+		<GROUP TradeGroup="N" DescribeGroup="">
+			<SECURITY SecurityId="EURUSD000TOD" SecShortName="EURUSD_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="EURUSDTODTOM" SecShortName="EURUSDTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USD000000TOD" SecShortName="USDRUB_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USD000TODTOM" SecShortName="USD_TODTOM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDAMDTODTOM" SecShortName="USDAMDTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDAMD_TOD" SecShortName="USDAMD_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNYTODTOM" SecShortName="USDCNYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDCNY_TOD" SecShortName="USDCNY_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKDTODTOM" SecShortName="USDHKDTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDHKD_TOD" SecShortName="USDHKD_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGSTODTOM" SecShortName="USDKGSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKGS_TOD" SecShortName="USDKGS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZTTODTOM" SecShortName="USDKZTTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDKZT_TOD" SecShortName="USDKZT_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDRUBTDSTMS" SecShortName="USD_TDSTMS" ReWritable="Y"/>
+			<SECURITY SecurityId="USDRUB_TDB" SecShortName="USDRUB_TDB" ReWritable="Y"/>
+			<SECURITY SecurityId="USDRUB_TDS" SecShortName="USDRUB_TDS" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJSTODTOM" SecShortName="USDTJSTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTJS_TOD" SecShortName="USDTJS_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTRYTODTOM" SecShortName="USDTRYTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDTRY_TOD" SecShortName="USDTRY_TOD" ReWritable="Y"/>
+			<SECURITY SecurityId="USDZARTODTOM" SecShortName="USDZARTDTM" ReWritable="Y"/>
+			<SECURITY SecurityId="USDZAR_TOD" SecShortName="USDZAR_TOD" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+	<CUX50 ReportDate="2024-02-23">
+		<GROUP TradeGroup="H" DescribeGroup="">
+			<SECURITY SecurityId="CALMAIN" SecShortName="" ReWritable="Y"/>
+		</GROUP>
+	</CUX50>
+</MICEX_DOC>
