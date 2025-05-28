@@ -17,19 +17,13 @@
 		"terminal.integrated.env.windows": {
 			"PATH": "${env:PATH}"
 		},
-		"cSpell.words": [
-			"CALMAIN",
-			"chcp",
-			"CNYRUB",
-			"HKDRUB",
-			"Holliday",
-			"KGSRUB",
-			"KGSRUBTODTOM",
-			"KZTRUBTDSTMS",
-			"TDSTMS",
-			"TODTOM",
-			"USDRUB",
-			"xmlfiles"
-		],
+		"cSpell.customDictionaries": {
+			"project-words": {
+				"name": "project-words",
+				"path": "${workspaceRoot}/cspell-words.txt",
+				"description": "Words used in this project",
+				"addWords": true
+			}
+		}
 	}
 }
