@@ -1,5 +1,6 @@
 appdir
 appname
+buildvcs
 CALMAIN
 charmap
 chcp
@@ -10,11 +11,13 @@ davecgh
 difflib
 getbool
 gopkg
+goroot
 HKDRUB
 Holliday
 KGSRUB
 KGSRUBTODTOM
 KZTRUBTDSTMS
+ldflags
 lqez
 memchr
 msvcr
@@ -22,6 +25,7 @@ pmezard
 stretchr
 TDSTMS
 TODTOM
+trimpath
 USDRUB
 xmlfiles
 распарсить

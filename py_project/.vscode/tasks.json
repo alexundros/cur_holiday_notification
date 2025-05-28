@@ -1,6 +1,19 @@
 {
     "version": "2.0.0",
     "tasks": [
+       {
+            "label": "py_project: test main.py",
+            "type": "shell",
+            "command": "python",
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "${workspaceFolder}/src/main.py",
+                "test_xmlfiles/0230301-20230331.xml",
+                "true"
+            ],
+        },
         {
             "label": "py_project: build",
             "type": "shell",
@@ -23,6 +36,7 @@
             },
             "args": [
                 "test_xmlfiles/0230301-20230331.xml",
+                "true"
             ],
         }
     ]

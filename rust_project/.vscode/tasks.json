@@ -33,6 +33,7 @@
             },
             "args": [
                 "test_xmlfiles/0230301-20230331.xml",
+                "true"
             ],
         }
     ]
