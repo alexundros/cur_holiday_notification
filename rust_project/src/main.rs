@@ -103,20 +103,15 @@ fn load_config(appdir: &Path, workdir: &Path) -> Result<Ini> {
 }
 
 fn config_items(config: &Ini, section: &str) -> Vec<(String, String)> {
-    // Пытаемся получить полную карту всех секций
     if let Some(sections_map) = config.get_map() {
-        // Пытаемся найти нужную секцию
         if let Some(section_map) = sections_map.get(section) {
-            // Преобразуем HashMap<String, Option<String>> в Vec<(String, String)>
             return section_map
                 .iter()
-                // Отфильтровываем только те элементы, у которых есть значение
                 .filter_map(|(k, v)| v.as_ref().map(|val| (k.clone(), val.clone())))
                 .collect();
         }
     }
 
-    // Если не нашли секцию или значение — возвращаем пустой список
     vec![]
 }
 
