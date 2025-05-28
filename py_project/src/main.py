@@ -103,6 +103,10 @@ def main():
     print(f'# Рабочая директория: {workdir}')
 
     is_error = True
+    f_mode = False
+    if len(sys.argv) > 2:
+        f_mode = sys.argv[2] == 'true'
+
     try:
         main_process(appdir, workdir)
         is_error = False
@@ -114,8 +118,10 @@ def main():
         print('# Не могу создать/записать файл результата')
         err = traceback.format_exc().replace('\n', '\n# ')
         print(f'# Программа прервана по ошибке: {ex}%n {err}')
+
     try:
-        input('# Нажмите <Enter> для выхода')
+        if not f_mode:
+            input('# Нажмите <Enter> для выхода')
     except (KeyboardInterrupt, UnicodeDecodeError, EOFError):
         pass
     sys.exit(1 if is_error else 0)

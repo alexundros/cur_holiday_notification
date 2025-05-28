@@ -3,13 +3,13 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Read, Write};
 use std::path::{Path, PathBuf};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use configparser::ini::Ini;
 use encoding_rs::WINDOWS_1251;
 use encoding_rs_io::DecodeReaderBytesBuilder;
+use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
-use quick_xml::Reader;
 
 fn main() -> Result<()> {
     let appdir = env::current_exe()?.parent().unwrap().to_path_buf();
@@ -17,14 +17,23 @@ fn main() -> Result<()> {
     println!("# Директория приложения: {}", appdir.display());
     println!("# Рабочая директория: {}", workdir.display());
 
+    let args: Vec<String> = env::args().collect();
     let result = std::panic::catch_unwind(|| {
-        if let Err(err) = main_process(&appdir, &workdir) {
+        if let Err(err) = main_process(&args, &appdir, &workdir) {
             eprintln!("# Программа прервана по ошибке: {:?}", err);
         }
     });
 
-    println!("# Нажмите <Enter> для выхода");
-    let _ = io::stdin().lock().lines().next();
+    let f_mode = if args.len() > 2 {
+        args[2] == "true"
+    } else {
+        false
+    };
+
+    if !f_mode {
+        println!("# Нажмите <Enter> для выхода");
+        let _ = io::stdin().lock().lines().next();
+    }
 
     if result.is_err() {
         std::process::exit(1);
@@ -33,8 +42,8 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn main_process(appdir: &Path, workdir: &Path) -> Result<()> {
-    let xml = get_xml_file()?;
+fn main_process(args: &Vec<String>, appdir: &Path, workdir: &Path) -> Result<()> {
+    let xml = get_xml_file(args)?;
     let start = std::time::Instant::now();
     let config = load_config(appdir, workdir)?;
 
@@ -50,8 +59,7 @@ fn main_process(appdir: &Path, workdir: &Path) -> Result<()> {
     Ok(())
 }
 
-fn get_xml_file() -> Result<PathBuf> {
-    let args: Vec<String> = env::args().collect();
+fn get_xml_file(args: &Vec<String>) -> Result<PathBuf> {
     let file = if args.len() > 1 {
         args[1].clone()
     } else {

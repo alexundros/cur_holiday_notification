@@ -41,9 +41,16 @@ func main() {
 	fmt.Printf("# Рабочая директория: %s\n", workdir)
 
 	var isError = true
+	var fMode = false
+	if len(os.Args) > 2 {
+		fMode = os.Args[2] == "true"
+	}
+
 	defer func() {
-		fmt.Print("# Нажмите <Enter> для выхода")
-		bufio.NewReader(os.Stdin).ReadBytes('\n')
+		if !fMode {
+			fmt.Print("# Нажмите <Enter> для выхода")
+			bufio.NewReader(os.Stdin).ReadBytes('\n')
+		}
 		if isError {
 			os.Exit(1)
 		} else {
