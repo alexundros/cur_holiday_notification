@@ -49,7 +49,7 @@
 ```
 * find dirs : 0.0004325 сек.
 # Директория приложения: zig_project\zig-out\bin
-# Рабочая директория: ю
+# Рабочая директория: .
 # Конфиг: cur_holiday_notification.cfg
 * getCfgFile: 0.0003594 сек.
 * parser.loadFile: 0.0005510 сек.
