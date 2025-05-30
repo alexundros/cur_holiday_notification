@@ -1,3 +1,5 @@
 build
 target
+.zig-cache
+zig-out
 *.out

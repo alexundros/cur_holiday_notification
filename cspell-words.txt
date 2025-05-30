@@ -8,6 +8,7 @@ cmdclass
 CNYRUB
 configparser
 davecgh
+deinit
 difflib
 getbool
 gopkg
@@ -21,11 +22,14 @@ ldflags
 lqez
 memchr
 msvcr
+orelse
 pmezard
+realpath
 stretchr
 TDSTMS
 TODTOM
 trimpath
 USDRUB
 xmlfiles
+zini
 распарсить

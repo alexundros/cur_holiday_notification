@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "rust_project"
+		},
+		{
+			"path": "zig_project"
 		}
 	],
 	"settings": {

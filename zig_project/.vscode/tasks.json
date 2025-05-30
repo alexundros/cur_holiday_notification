@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "zig_project: build",
+            "type": "shell",
+            "command": "zig build --verbose --release=fast",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+        },
+        {
+            "label": "zig_project: test build",
+            "type": "shell",
+            "command": "${workspaceFolder}/zig-out/bin/zig_project.exe",
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "test_xmlfiles/0230301-20230331.xml",
+                "true"
+            ],
+        }
+    ]
+}
