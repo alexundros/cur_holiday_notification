@@ -14,14 +14,18 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(gpa);
     defer std.process.argsFree(gpa, args);
 
-    const proc_start = std.time.nanoTimestamp();
+    const start = std.time.nanoTimestamp();
 
     var app_path_buf: [std.fs.max_path_bytes]u8 = undefined;
     const app_path = try fs.selfExePath(&app_path_buf);
     const appdir = fs.path.dirname(app_path) orelse ".";
-    const workdir = try fs.cwd().realpathAlloc(gpa, ".");
-    const delta1 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - proc_start)) / 1e9;
-    try stdout.print("* find dirs : {d:.6} сек.\n", .{delta1});
+
+    // realpathAlloc выполняется примерно 0.0002 сек.
+    //const workdir = try fs.cwd().realpathAlloc(gpa, ".");
+    const workdir = ".";
+
+    //const d1 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - proc_start)) / 1e9;
+    //try stdout.print("* find dirs : {d:.6} сек.\n", .{d1});
 
     try stdout.print("# Директория приложения: {s}\n", .{appdir});
     try stdout.print("# Рабочая директория: {s}\n", .{workdir});
@@ -31,50 +35,56 @@ pub fn main() !void {
         if (is_error) std.process.exit(1) else std.process.exit(0);
     }
 
+    const s1 = std.time.nanoTimestamp();
+
     var parser = try getCfgParser(gpa, appdir, workdir);
     defer parser.deinit();
 
-    const proc_delta = @as(f64, @floatFromInt(std.time.nanoTimestamp() - proc_start)) / 1e9;
-    try stdout.print("# Обработка завершена: {d:.6} сек.\n", .{proc_delta});
+    const d1 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - s1)) / 1e9;
+    try stdout.print("* getCfgParser: {d:.9} сек.\n", .{d1});
+
+    const delta = @as(f64, @floatFromInt(std.time.nanoTimestamp() - start)) / 1e9;
+    try stdout.print("# Обработка завершена: {d:.6} сек.\n", .{delta});
     is_error = false;
 }
 
-fn getCfgFile(gpa: Allocator, appdir: []const u8, workdir: []const u8) ![]const u8 {
-    const filename = "cur_holiday_notification.cfg";
-    var exe_dir = try fs.openDirAbsolute(appdir, .{ .access_sub_paths = true });
-    defer exe_dir.close();
-    if (exe_dir.access(filename, .{})) |_| {
-        return try fs.path.join(gpa, &[_][]const u8{ appdir, filename });
-    } else |err| {
-        if (err != error.FileNotFound) return err;
+fn tryPath(gpa: Allocator, base: []const u8, filename: []const u8) !?[]u8 {
+    const path = try std.fs.path.join(gpa, &[_][]const u8{ base, filename });
+    if (std.fs.openFileAbsolute(path, .{})) |file| {
+        file.close();
+        return path;
+    } else |_| {
+        gpa.free(path);
+        return null;
     }
-    var workdir_dir = try fs.openDirAbsolute(workdir, .{ .access_sub_paths = true });
-    defer workdir_dir.close();
-    if (workdir_dir.access(filename, .{})) |_| {
-        return try fs.path.join(gpa, &[_][]const u8{ workdir, filename });
-    } else |err| {
-        if (err != error.FileNotFound) return err;
-    }
-    return error.FileNotFound;
 }
 
 fn getCfgParser(gpa: Allocator, appdir: []const u8, workdir: []const u8) !zini.Parser {
     const stdout = io.getStdOut().writer();
     var parser = try zini.Parser.init(gpa);
 
-    const start1 = std.time.nanoTimestamp();
-    const cfg_file = try getCfgFile(gpa, appdir, workdir);
-    try stdout.print("# Конфиг: {s}\n", .{cfg_file});
-    const delta1 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - start1)) / 1e9;
-    try stdout.print("* getCfgFile: {d:.6} сек.\n", .{delta1});
+    const s1 = std.time.nanoTimestamp();
 
-    const start2 = std.time.nanoTimestamp();
+    const cfg_name = "cur_holiday_notification.cfg";
+    const cfg_file = blk: {
+        if (try tryPath(gpa, appdir, cfg_name)) |path| break :blk path;
+        if (try tryPath(gpa, workdir, cfg_name)) |path| break :blk path;
+        return error.FileNotFound;
+    };
+
+    const d1 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - s1)) / 1e9;
+    try stdout.print("# Конфиг: {s}\n", .{cfg_file});
+    try stdout.print("* getCfgParser d1: {d:.9} сек.\n", .{d1});
+
+    const s2 = std.time.nanoTimestamp();
+
     parser.loadFile(cfg_file) catch |e| {
         std.debug.print("Parse ini Error {any}\n", .{e});
         std.process.exit(1);
     };
-    const delta2 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - start2)) / 1e9;
-    try stdout.print("* parser.loadFile: {d:.6} сек.\n", .{delta2});
+
+    const d2 = @as(f64, @floatFromInt(std.time.nanoTimestamp() - s2)) / 1e9;
+    try stdout.print("* parser.loadFile: {d:.9} сек.\n", .{d2});
 
     return parser;
 }
