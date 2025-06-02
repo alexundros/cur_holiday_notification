@@ -10,6 +10,7 @@ configparser
 davecgh
 deinit
 difflib
+enabledelayedexpansion
 getbool
 gopkg
 goroot
@@ -25,6 +26,7 @@ msvcr
 orelse
 pmezard
 realpath
+setlocal
 stretchr
 TDSTMS
 TODTOM
