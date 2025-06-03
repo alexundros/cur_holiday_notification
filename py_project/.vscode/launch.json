@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "py_project: debug file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/..",
+            "args": [
+                "test_xmlfiles/20240201-20240229.xml",
+                "true"
+            ],
+        },
+    ]
+}
