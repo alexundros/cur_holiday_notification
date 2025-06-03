@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "configurations": [
+    {
+      "name": "c_project: debug file",
+      "type": "cppdbg",
+      "request": "launch",
+      "preLaunchTask": "c_project: build debug",
+      "program": "${workspaceFolder}/build/c_project_debug.exe",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "stopAtEntry": false,
+      "setupCommands": [
+        {
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ],
+      "cwd": "${workspaceFolder}/..",
+      "args": [
+        "test_xmlfiles/0230301-20230331.xml",
+        "true"
+      ],
+    },
+  ],
+}

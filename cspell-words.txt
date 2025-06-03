@@ -16,11 +16,13 @@ gopkg
 goroot
 HKDRUB
 Holliday
+inih
 KGSRUB
 KGSRUBTODTOM
 KZTRUBTDSTMS
 ldflags
 lqez
+lxml
 memchr
 msvcr
 orelse

@@ -1,0 +1,71 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "c_project: before build",
+            "type": "shell",
+            "hide": true,
+            "command": "if not exist build mkdir build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "c_project: build debug",
+            "type": "shell",
+            "dependsOn": "c_project: before build",
+            "command": "gcc",
+            "args": [
+                "${workspaceFolder}/src/main.c",
+                //"${workspaceFolder}/src/utils/ini/ini.c",
+                //"${workspaceFolder}/src/utils/ini_utils.c",
+                //"${workspaceFolder}/src/utils/xml_utils.c",
+                "-g",
+                "-o",
+                "${workspaceFolder}/build/c_project_debug.exe",
+                "-I${workspaceFolder}/src/**",
+                "-I${env:MSYS2_HOME}/mingw64/include/libxml2",
+                "-L${env:MSYS2_HOME}/mingw64/lib",
+                "-lxml2",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "c_project: build",
+            "type": "shell",
+            "dependsOn": "c_project: before build",
+            "command": "gcc",
+            "args": [
+                "${workspaceFolder}/src/main.c",
+                // "${workspaceFolder}/src/utils/ini/ini.c",
+                // "${workspaceFolder}/src/utils/ini_utils.c",
+                // "${workspaceFolder}/src/utils/xml_utils.c",
+                "-Wall",
+                "-O3",
+                "-o",
+                "${workspaceFolder}/build/c_project.exe",
+                "-I${workspaceFolder}/src/**",
+                "-I${env:MSYS2_HOME}/mingw64/include/libxml2",
+                "-L${env:MSYS2_HOME}/mingw64/lib",
+                "-lxml2",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "c_project: test build",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/c_project.exe",
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "args": [
+                "test_xmlfiles/0230301-20230331.xml",
+                "true"
+            ],
+        }
+    ]
+}

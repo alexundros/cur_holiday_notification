@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "zig_project"
+		},
+		{
+			"path": "c_project"
 		}
 	],
 	"settings": {
