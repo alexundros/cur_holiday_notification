@@ -20,13 +20,13 @@ type Security struct {
 }
 
 type Group struct {
-	TradeGroup string `xml:"TradeGroup,attr"`
+	TradeGroup string     `xml:"TradeGroup,attr"`
+	Securities []Security `xml:"SECURITY"`
 }
 
 type CUX50 struct {
-	ReportDate string     `xml:"ReportDate,attr"`
-	Groups     []Group    `xml:"GROUP"`
-	Securities []Security `xml:"SECURITY"`
+	ReportDate string  `xml:"ReportDate,attr"`
+	Groups     []Group `xml:"GROUP"`
 }
 
 type Root struct {
@@ -144,24 +144,23 @@ func processXML(cfg *ini.File, xmlPath string) [][2]string {
 
 	features := cfg.Section("features")
 	hDay := features.Key("HDay").MustBool(false)
-
 	items := cfg.Section("items").KeysHash()
 
 	var result [][2]string
 	for _, item := range root.CUX50Items {
-		if hDay {
-			for _, g := range item.Groups {
+		for _, g := range item.Groups {
+			if hDay {
 				if g.TradeGroup == "H" {
 					result = append(result, [2]string{"HDay", item.ReportDate})
 					goto nextItem
 				}
 			}
-		}
-		for k, v := range items {
-			for _, sec := range item.Securities {
-				if sec.SecShortName == k {
-					result = append(result, [2]string{v, item.ReportDate})
-					break
+			for _, sec := range g.Securities {
+				for k, v := range items {
+					if sec.SecShortName == k {
+						result = append(result, [2]string{v, item.ReportDate})
+						break
+					}
 				}
 			}
 		}

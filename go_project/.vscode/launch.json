@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "go_project: debug file",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/..",
+            "args": [
+                "test_xmlfiles/20240201-20240229.xml",
+                "true"
+            ],
+        },
+    ]
+}
