@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 {
     setlocale(LC_CTYPE, ".UTF8");
 
-    struct timespec t0, t1;
+    struct timespec t0, t1, t2;
     clock_gettime(CLOCK_MONOTONIC, &t0);
 
     char *appdir = get_appdir(argv[0]);
@@ -115,8 +115,16 @@ int main(int argc, char *argv[])
     }
     char *workdir = strdup(workdir_buf);
 
+    clock_gettime(CLOCK_MONOTONIC, &t1);
+
     printf("# Директория приложения: %s\n", appdir);
     printf("# Рабочая директория: %s\n", workdir);
+
+    clock_gettime(CLOCK_MONOTONIC, &t2);
+    printf("# * printf: %.9f сек.\n", diff_nsec(&t1, &t2) / 1e9);
+
+    //const char* msg = "Hello, World!\n";
+    //write(STDOUT_FILENO, msg, strlen(msg));
 
     // // Файл конфигурации
     // char* cfg_path = get_config_path(appdir);
@@ -190,9 +198,7 @@ int main(int argc, char *argv[])
     // printf("# Результат сохранен в файл: %s\n", out_path);
     // fclose(fo);
 
-    clock_gettime(CLOCK_MONOTONIC, &t1);
-    long times_ns = diff_nsec(&t0, &t1);
-    printf("# Обработка завершена: %.6f сек.\n", times_ns / 1e9);
+    printf("# Обработка завершена: %.9f сек.\n", diff_nsec(&t0, &t1) / 1e9);
 
     // // Освобождаем память
     // free_result_list(&results);
