@@ -125,6 +125,10 @@ func processXML(cfg *ini.File, xmlPath string) [][2]string {
 	}
 	defer file.Close()
 
+	features := cfg.Section("features")
+	hDay := features.Key("HDay").MustBool(false)
+	items := cfg.Section("items").KeysHash()
+
 	// Преобразуем из windows-1251 в utf-8
 	decoder := transform.NewReader(file, charmap.Windows1251.NewDecoder())
 	data, err := io.ReadAll(decoder)
@@ -141,10 +145,6 @@ func processXML(cfg *ini.File, xmlPath string) [][2]string {
 	if err != nil {
 		panic(err)
 	}
-
-	features := cfg.Section("features")
-	hDay := features.Key("HDay").MustBool(false)
-	items := cfg.Section("items").KeysHash()
 
 	var result [][2]string
 	for _, item := range root.CUX50Items {
