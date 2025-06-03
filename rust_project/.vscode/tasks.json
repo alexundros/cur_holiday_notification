@@ -2,17 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "rust_project: clean",
-            "type": "shell",
-            "command": "cargo",
-            "options": {
-                "cwd": "${workspaceFolder}",
-            },
-            "args": [
-                "clean",
-            ]
-        },
-        {
             "label": "rust_project: build",
             "type": "shell",
             "command": "cargo",
@@ -32,7 +21,7 @@
                 "cwd": "${workspaceFolder}/.."
             },
             "args": [
-                "test_xmlfiles/0230301-20230331.xml",
+                "test_xmlfiles/20240201-20240229.xml",
                 "true"
             ],
         }

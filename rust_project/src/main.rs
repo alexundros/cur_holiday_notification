@@ -129,7 +129,6 @@ fn process_xml(config: &Ini, xml_path: &Path) -> Result<Vec<(String, String)>> {
     reader.trim_text(true);
     let mut buf = Vec::new();
 
-    let mut inside_cux = false;
     let mut report_date = String::new();
 
     loop {
@@ -137,36 +136,43 @@ fn process_xml(config: &Ini, xml_path: &Path) -> Result<Vec<(String, String)>> {
             Ok(Event::Start(e)) => {
                 let tag = e.name();
                 if tag == QName(b"CUX50") {
-                    inside_cux = true;
                     for attr in e.attributes().with_checks(false) {
                         let attr = attr?;
                         if attr.key == QName(b"ReportDate") {
                             report_date = String::from_utf8_lossy(&attr.value).to_string();
+                            break;
                         }
                     }
-                } else if inside_cux && tag == QName(b"GROUP") && fhd {
+                } else if tag == QName(b"GROUP") && fhd {
                     for attr in e.attributes().with_checks(false) {
                         let attr = attr?;
-                        if attr.key == QName(b"TradeGroup") && &*attr.value == b"H" {
-                            results.push(("HDay".to_string(), report_date.clone()));
+                        if attr.key == QName(b"TradeGroup") {
+                            if &*attr.value == b"H" {
+                                results.push(("HDay".to_string(), report_date.clone()));
+                            }
+                            break;
                         }
                     }
-                } else if inside_cux && tag == QName(b"SECURITY") {
+                }
+            }
+            Ok(Event::Empty(ref e)) => {
+                let tag = e.name();
+                if tag == QName(b"SECURITY") {
                     for attr in e.attributes().with_checks(false) {
                         let attr = attr?;
                         if attr.key == QName(b"SecShortName") {
                             let name = String::from_utf8_lossy(&attr.value).to_string();
                             for (k, v) in &items {
-                                if name == *k {
+                                if k.eq_ignore_ascii_case(&name) {
                                     results.push((v.clone(), report_date.clone()));
                                 }
                             }
+                            break;
                         }
                     }
                 }
             }
             Ok(Event::End(e)) if e.name() == QName(b"CUX50") => {
-                inside_cux = false;
                 report_date.clear();
             }
             Ok(Event::Eof) => break,

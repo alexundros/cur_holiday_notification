@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "rust_project: debug file",
+            "type": "lldb",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=rust_project",
+                    "--package=rust_project"
+                ],
+                "filter": {
+                    "name": "rust_project",
+                    "kind": "bin"
+                }
+            },
+            "cwd": "${workspaceFolder}/..",
+            "args": [
+                "test_xmlfiles/20240201-20240229.xml",
+                "true"
+            ],
+        }
+    ]
+}
