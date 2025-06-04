@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "configurations": [
     {
-      "name": "c_project: debug file",
+      "name": "c_project: debug",
       "type": "cppdbg",
       "request": "launch",
       "preLaunchTask": "c_project: build debug",
@@ -15,10 +15,6 @@
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         },
-        {
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
       ],
       "cwd": "${workspaceFolder}/..",
       "args": [
