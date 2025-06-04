@@ -4,31 +4,33 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define MAX_ITEMS 256
 #define MAX_KEY_LEN 64
 #define MAX_VAL_LEN 256
 
 typedef struct
 {
-    bool HDay;
-} FeaturesConfig;
-
-typedef struct
-{
     char key[MAX_KEY_LEN];
-    char val[MAX_VAL_LEN];
-} ItemPair;
+    char value[MAX_VAL_LEN];
+} config_item_t;
 
 typedef struct
 {
-    ItemPair items[MAX_ITEMS];
+    config_item_t *list;
     int count;
-} ItemsConfig;
+    int capacity;
+} config_list_t;
 
-// Callback для inih
-int config_handler(void *user, const char *section, const char *name, const char *value);
+typedef struct
+{
+    bool HDay;
+} config_features_t;
 
-// Функция загрузки конфигурации из INI-файла
-int load_config(const char *cfg_path, FeaturesConfig *fcfg, ItemsConfig *icfg);
+typedef struct
+{
+    config_features_t features;
+    config_list_t items;
+} config_t;
+
+bool init_config(config_t *config, const char *cfg_path);
 
 #endif // INI_UTILS_H

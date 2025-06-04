@@ -1,57 +1,74 @@
-#include "ini_utils.h"
-#include "ini/ini.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-// Временные структуры для передачи в callback
-static FeaturesConfig tmp_feats;
-static ItemsConfig tmp_items;
+#include "ini/ini.h"
+#include "ini_utils.h"
 
-// config_handler вызывается inih для каждой записи name=value
-int config_handler(void *user, const char *section, const char *name, const char *value)
+void config_items_init(config_list_t *items)
 {
-    (void)user;
+    items->count = 0;
+    items->capacity = 4;
+    items->list = malloc(sizeof(config_item_t) * items->capacity);
+}
 
+void config_items_add(config_list_t *items, const char *key, const char *value)
+{
+    if (items->count >= items->capacity)
+    {
+        items->capacity *= 2;
+        items->list = realloc(items->list, sizeof(config_item_t) * items->capacity);
+    }
+    strncpy(items->list[items->count].key, key, MAX_KEY_LEN - 1);
+    strncpy(items->list[items->count].value, value, MAX_VAL_LEN - 1);
+    items->list[items->count].key[MAX_KEY_LEN - 1] = '\0';
+    items->list[items->count].value[MAX_VAL_LEN - 1] = '\0';
+    items->count++;
+}
+
+void config_items_free(config_list_t *items)
+{
+    items->count = 0;
+    items->capacity = 0;
+    free(items->list);
+    items->list = NULL;
+}
+
+int config_handler(void *user, const char *section, const char *name, const char *val)
+{
+    config_t *config = (config_t *)user;
     if (strcmp(section, "features") == 0)
     {
         if (strcmp(name, "HDay") == 0)
         {
-            if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0)
-            {
-                tmp_feats.HDay = true;
-            }
-            else
-            {
-                tmp_feats.HDay = false;
-            }
+            config->features.HDay = (strcmp(val, "true") == 0);
         }
     }
     else if (strcmp(section, "items") == 0)
     {
-        if (tmp_items.count < MAX_ITEMS)
-        {
-            strncpy(tmp_items.items[tmp_items.count].key, name, MAX_KEY_LEN - 1);
-            tmp_items.items[tmp_items.count].key[MAX_KEY_LEN - 1] = '\0';
-            strncpy(tmp_items.items[tmp_items.count].val, value, MAX_VAL_LEN - 1);
-            tmp_items.items[tmp_items.count].val[MAX_VAL_LEN - 1] = '\0';
-            tmp_items.count++;
-        }
+        config_items_add(&config->items, name, val);
     }
     return 1;
 }
 
-int load_config(const char *cfg_path, FeaturesConfig *fcfg, ItemsConfig *icfg)
+bool init_config(config_t *config, const char *cfg_path)
 {
-    tmp_feats.HDay = false;
-    tmp_items.count = 0;
-
-    if (ini_parse(cfg_path, config_handler, NULL) < 0)
+    memset(config, 0, sizeof(config_t));
+    config_items_init(&config->items);
+    if (ini_parse(cfg_path, config_handler, config) < 0)
     {
-        return -1;
+        config_items_free(&config->items);
+        return false;
     }
-
-    *fcfg = tmp_feats;
-    *icfg = tmp_items;
-    return 0;
+    // printf("Конфиг:\n");
+    // printf("[features]\n");
+    // printf("HDay = %s\n", config->features.HDay ? "true" : "false");
+    // printf("[items]\n");
+    // for (int i = 0; i < config->items.count; i++)
+    // {
+    //     char *key = config->items.list[i].key;
+    //     char *val = config->items.list[i].value;
+    //     printf("%s = %s\n", key, val);
+    // }
+    return true;
 }
