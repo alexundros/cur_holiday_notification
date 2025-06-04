@@ -51,24 +51,14 @@ int config_handler(void *user, const char *section, const char *name, const char
     return 1;
 }
 
-bool init_config(config_t *config, const char *cfg_path)
+bool init_config(config_t *config, const char *config_path)
 {
     memset(config, 0, sizeof(config_t));
     config_items_init(&config->items);
-    if (ini_parse(cfg_path, config_handler, config) < 0)
+    if (ini_parse(config_path, config_handler, config) < 0)
     {
         config_items_free(&config->items);
         return false;
     }
-    // printf("Конфиг:\n");
-    // printf("[features]\n");
-    // printf("HDay = %s\n", config->features.HDay ? "true" : "false");
-    // printf("[items]\n");
-    // for (int i = 0; i < config->items.count; i++)
-    // {
-    //     char *key = config->items.list[i].key;
-    //     char *val = config->items.list[i].value;
-    //     printf("%s = %s\n", key, val);
-    // }
     return true;
 }
