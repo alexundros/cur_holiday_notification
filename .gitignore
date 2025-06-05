@@ -1,5 +1,7 @@
+.idea
 build
 target
 .zig-cache
 zig-out
+cmake-*
 *.out
