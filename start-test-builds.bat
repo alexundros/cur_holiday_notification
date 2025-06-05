@@ -24,5 +24,9 @@ for %%a in (test_xmlfiles\*.xml) do (
   echo # RUST_PROJECT - TEST FILE !c!:
   echo.
   rust_project\target\release\rust_project.exe "%%a" true
+  echo.
+  echo # C_PROJECT - TEST FILE !c!:
+  echo.
+  c_project\build\c_project.exe "%%a" true
 )
 pause

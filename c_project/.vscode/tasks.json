@@ -56,6 +56,7 @@
                 "src/utils/ini_utils.c",
                 "src/utils/xml_utils.c",
                 "-O3",
+                "-flto",
                 "-o",
                 "build/c_project.exe",
                 "-Isrc/**",

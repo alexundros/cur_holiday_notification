@@ -60,11 +60,11 @@ static char *get_xml_file(int argc, char *argv[]) {
 static char *get_config_path(const char *appdir) {
     const char *name = "cur_holiday_notification.cfg";
     char buf[1024];
-    snprintf(buf, sizeof(buf), "%s", name);
+    snprintf(buf, 1024, "%s", name);
     if (file_exists(buf)) {
         return strdup(buf);
     }
-    snprintf(buf, sizeof(buf), "%s/%s", appdir, name);
+    snprintf(buf, 1024, "%s/%s", appdir, name);
     if (file_exists(buf)) {
         return strdup(buf);
     }
@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     struct timespec ts_start = get_timespec();
+    char text_buf[1024];
 
     char *appdir = get_appdir();
     if (!appdir)
@@ -128,8 +129,10 @@ int main(int argc, char *argv[]) {
         return 1;
     char *workdir = strdup(workdir_buf);
 
-    printf("# Директория приложения: %s\n", appdir);
-    printf("# Рабочая директория: %s\n", workdir);
+    snprintf(text_buf, 1024, "# Директория приложения: %s", appdir);
+    puts(text_buf);
+    snprintf(text_buf, 1024, "# Рабочая директория: %s", workdir);
+    puts(text_buf);
 
     // Конфигурация
 
@@ -140,7 +143,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "# Конфиг не найден\n");
         return 2;
     }
-    printf("# Используем конфиг: %s\n", config_path);
+    snprintf(text_buf, 1024, "# Используем конфиг: %s", config_path);
+    puts(text_buf);
 
     config_t config;
     if (!init_config(&config, config_path)) {
@@ -157,7 +161,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "# Ошибка: XML файл не указан\n");
         return 4;
     }
-    printf("# Обработка: %s\n", xml_path);
+    snprintf(text_buf, 1024, "# Обработка: %s", xml_path);
+    puts(text_buf);
 
     result_list_t results;
     init_result_list(&results);
@@ -177,40 +182,39 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "# Не могу создать/записать файл результата: %s\n", out_path);
         return 6;
     }
-
     if (results.count > 0) {
-        printf("# Результат:\n");
+        puts("# Результат:");
         for (int i = 0; i < results.count; i++) {
-            char *code = results.items[i].code;
-            char *date = results.items[i].date;
-            fprintf(fo, "%s = %s\n", code, date);
-            printf("%s = %s\n", code, date);
+            snprintf(text_buf, 1024, "%s = %s", results.items[i].code, results.items[i].date);
+            fputs(text_buf, fo);
+            fputc('\n', fo);
+            puts(text_buf);
         }
     } else {
         printf("# Нет результата\n");
     }
-
-    printf("# Результат сохранен в файл: %s\n", out_path);
     fclose(fo);
+
+    snprintf(text_buf, 1024, "# Результат сохранен в файл: %s", out_path);
+    puts(text_buf);
 
     struct timespec ts_out_e = get_timespec();
 
     // Завершение
 
+    struct timespec ts_end = get_timespec();
+
     free_result_list(&results);
     free(config_path);
     free(xml_path);
 
-    struct timespec ts_end = get_timespec();
-
     diff_nsec_print("* config", &ts_config_s, &ts_config_e);
     diff_nsec_print("* process xml", &ts_config_e, &ts_xml_e);
     diff_nsec_print("* process results", &ts_xml_e, &ts_out_e);
-
     diff_nsec_print("Обработка завершена", &ts_start, &ts_end);
 
     if (argc <= 2 || strcmp(argv[2], "true") != 0) {
-        printf("# Нажмите <Enter> для выхода\n");
+        puts("# Нажмите <Enter> для выхода");
         getchar();
     }
 
