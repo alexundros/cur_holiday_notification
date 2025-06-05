@@ -8,19 +8,19 @@ typedef struct
 {
     char code[128];
     char date[32];
-} ResultItem;
+} result_item_t;
 
 typedef struct
 {
-    ResultItem *items;
+    result_item_t *items;
     int count;
     int capacity;
-} ResultList;
+} result_list_t;
 
-void init_result_list(ResultList *rl);
-void append_result(ResultList *rl, const char *code, const char *date);
-void free_result_list(ResultList *rl);
+void init_result_list(result_list_t *rl);
+void append_result(result_list_t *rl, const char *code, const char *date);
+void free_result_list(result_list_t *rl);
 
-int process_xml(const char *xml_path, const config_t *config, ResultList *rl);
+int process_xml(const char *xml_path, const config_t *config, result_list_t *rl);
 
 #endif // XML_UTILS_H
