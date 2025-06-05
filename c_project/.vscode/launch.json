@@ -18,7 +18,7 @@
       ],
       "cwd": "${workspaceFolder}/..",
       "args": [
-        "test_xmlfiles/0230301-20230331.xml",
+        "test_xmlfiles/20240201-20240229.xml",
         "true"
       ],
     },
