@@ -13,7 +13,7 @@ typedef struct {
 } config_item_t;
 
 typedef struct {
-    config_item_t *list;
+    config_item_t* list;
     int count;
     int capacity;
 } config_list_t;
@@ -27,6 +27,6 @@ typedef struct {
     config_list_t items;
 } config_t;
 
-bool init_config(config_t *config, const char *cfg_path);
+bool init_config(config_t* config, const char* cfg_path);
 
-#endif // INI_UTILS_H
+#endif  // INI_UTILS_H
