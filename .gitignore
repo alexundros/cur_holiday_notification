@@ -5,3 +5,4 @@ target
 zig-out
 cmake-*
 *.out
+prompt*.txt

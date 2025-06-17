@@ -21,8 +21,8 @@ static inline struct timespec get_timespec() {
 
 static inline void diff_print(char* text_buf, char* text, const struct timespec* a, const struct timespec* b) {
     long diff = (b->tv_sec - a->tv_sec) * 1000000000L + (b->tv_nsec - a->tv_nsec);
-    snprintf(text_buf, 1024, "# %s: %.9f сек.", text, diff / 1e9);
-    puts(text_buf);
+    snprintf(text_buf, 1024, "# %s: %.9f сек.\n", text, diff / 1e9);
+    fputs(text_buf, stdout);
 }
 
 static int file_exists(const char* path) {
@@ -111,6 +111,8 @@ int main(int argc, char* argv[]) {
 
     struct timespec ts_start = get_timespec();
 
+    setvbuf(stdout, NULL, _IOFBF, 8192);
+
     char text_buf[1024];
 
     char* appdir = get_appdir();
@@ -119,10 +121,11 @@ int main(int argc, char* argv[]) {
     if (!getcwd(workdir_buf, sizeof(workdir_buf))) return 1;
     char* workdir = strdup(workdir_buf);
 
-    snprintf(text_buf, 1024, "# Директория приложения: %s", appdir);
-    puts(text_buf);
-    snprintf(text_buf, 1024, "# Рабочая директория: %s", workdir);
-    puts(text_buf);
+    snprintf(text_buf, 1024, "# Директория приложения: %s\n", appdir);
+    fputs(text_buf, stdout);
+
+    snprintf(text_buf, 1024, "# Рабочая директория: %s\n", workdir);
+    fputs(text_buf, stdout);
 
     // Конфигурация
 
@@ -133,8 +136,8 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "# Конфиг не найден\n");
         return 2;
     }
-    snprintf(text_buf, 1024, "# Используем конфиг: %s", config_path);
-    puts(text_buf);
+    snprintf(text_buf, 1024, "# Используем конфиг: %ss\n", config_path);
+    fputs(text_buf, stdout);
 
     config_t config;
     if (!init_config(&config, config_path)) {
@@ -151,8 +154,8 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "# Ошибка: XML файл не указан\n");
         return 4;
     }
-    snprintf(text_buf, 1024, "# Обработка: %s", xml_path);
-    puts(text_buf);
+    snprintf(text_buf, 1024, "# Обработка: %s\n", xml_path);
+    fputs(text_buf, stdout);
 
     result_list_t results;
     init_result_list(&results);
@@ -166,27 +169,26 @@ int main(int argc, char* argv[]) {
     // Вывод результата
 
     char out_path[1024];
-    snprintf(out_path, sizeof(out_path), "%s/c_project.out", workdir);
+    snprintf(out_path, 1024, "%s/c_project.out", workdir);
     FILE* fo = fopen(out_path, "w");
     if (!fo) {
         fprintf(stderr, "# Не могу создать/записать файл результата: %s\n", out_path);
         return 6;
     }
     if (results.count > 0) {
-        puts("# Результат:");
+        fputs("# Результат:\n", stdout);
         for (int i = 0; i < results.count; i++) {
-            snprintf(text_buf, 1024, "%s = %s", results.items[i].code, results.items[i].date);
+            snprintf(text_buf, 1024, "%s = %s\n", results.items[i].code, results.items[i].date);
             fputs(text_buf, fo);
-            fputc('\n', fo);
-            puts(text_buf);
+            fputs(text_buf, stdout);
         }
     } else {
-        printf("# Нет результата\n");
+        fputs("# Нет результата\n", stdout);
     }
     fclose(fo);
 
-    snprintf(text_buf, 1024, "# Результат сохранен в файл: %s", out_path);
-    puts(text_buf);
+    snprintf(text_buf, 1024, "# Результат сохранен в файл: %s\n", out_path);
+    fputs(text_buf, stdout);
 
     struct timespec ts_out_e = get_timespec();
 
@@ -203,8 +205,10 @@ int main(int argc, char* argv[]) {
     diff_print(text_buf, "* process results", &ts_xml_e, &ts_out_e);
     diff_print(text_buf, "Обработка завершена", &ts_start, &ts_end);
 
+    fflush(stdout);
+
     if (argc <= 2 || strcmp(argv[2], "true") != 0) {
-        puts("# Нажмите <Enter> для выхода");
+        fputs("# Нажмите <Enter> для выхода", stdout);
         getchar();
     }
 

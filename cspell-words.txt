@@ -24,6 +24,7 @@ ldflags
 lqez
 lxml
 memchr
+MICEX
 msvcr
 orelse
 pmezard
