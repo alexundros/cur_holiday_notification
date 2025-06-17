@@ -35,9 +35,9 @@ void free_result_list(result_list_t* rl) {
 
 int process_xml(const char* xml_path, const config_t* config, result_list_t* rl) {
     xmlInitParser();
-
     xmlDocPtr doc = xmlReadFile(xml_path, NULL, XML_PARSE_NOWARNING | XML_PARSE_NOERROR);
     if (doc == NULL) return 1;
+
     xmlNodePtr root = xmlDocGetRootElement(doc);
     if (root == NULL || xmlStrcmp(root->name, (const xmlChar*)"MICEX_DOC") != 0) {
         xmlFreeDoc(doc);
@@ -45,8 +45,8 @@ int process_xml(const char* xml_path, const config_t* config, result_list_t* rl)
     }
 
     for (xmlNodePtr cux = root->children; cux; cux = cux->next) {
-        if (cux->type != XML_ELEMENT_NODE) continue;
-        if (xmlStrcmp(cux->name, (const xmlChar*)"CUX50") != 0) continue;
+        if (cux->type != XML_ELEMENT_NODE || xmlStrcmp(cux->name, (const xmlChar*)"CUX50") != 0) continue;
+
         xmlChar* attr_date = xmlGetProp(cux, (const xmlChar*)"ReportDate");
         if (attr_date == NULL) continue;
 
@@ -59,46 +59,42 @@ int process_xml(const char* xml_path, const config_t* config, result_list_t* rl)
 
         if (config->features.HDay) {
             for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
-                if (grp->type != XML_ELEMENT_NODE) continue;
-                if (xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
+                if (grp->type != XML_ELEMENT_NODE || xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
 
                 xmlChar* tg = xmlGetProp(grp, (const xmlChar*)"TradeGroup");
-                if (tg && xmlStrcmp(tg, (const xmlChar*)"H") == 0) {
-                    append_result(rl, "HDay", report_date);
+                if (tg) {
+                    if (xmlStrcmp(tg, (const xmlChar*)"H") == 0) {
+                        append_result(rl, "HDay", report_date);
+                        xmlFree(tg);
+                        found_in_this_cux = true;
+                        break;
+                    }
                     xmlFree(tg);
-                    found_in_this_cux = true;
-                    break;
                 }
-                if (tg) xmlFree(tg);
             }
             if (found_in_this_cux) continue;
         }
 
-        for (int i = 0; i < config->items.count; i++) {
-            bool item_matched = false;
-            const char* key = config->items.list[i].key;
-            const char* val = config->items.list[i].value;
+        for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
+            if (grp->type != XML_ELEMENT_NODE || xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
 
-            for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
-                if (grp->type != XML_ELEMENT_NODE) continue;
-                if (xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
+            for (xmlNodePtr sec = grp->children; sec; sec = sec->next) {
+                if (sec->type != XML_ELEMENT_NODE || xmlStrcmp(sec->name, (const xmlChar*)"SECURITY") != 0) continue;
 
-                for (xmlNodePtr sec = grp->children; sec; sec = sec->next) {
-                    if (sec->type != XML_ELEMENT_NODE) continue;
-                    if (xmlStrcmp(sec->name, (const xmlChar*)"SECURITY") != 0) continue;
-
-                    xmlChar* ssn = xmlGetProp(sec, (const xmlChar*)"SecShortName");
-                    if (ssn && strcmp((const char*)ssn, key) == 0) {
-                        append_result(rl, val, report_date);
-                        xmlFree(ssn);
-                        item_matched = true;
-                        break;
+                xmlChar* ssn = xmlGetProp(sec, (const xmlChar*)"SecShortName");
+                if (ssn) {
+                    for (int i = 0; i < config->items.count; i++) {
+                        if (strcmp((const char*)ssn, config->items.list[i].key) == 0) {
+                            append_result(rl, config->items.list[i].value, report_date);
+                            found_in_this_cux = true;
+                            break;
+                        }
                     }
-                    if (ssn) xmlFree(ssn);
+                    xmlFree(ssn);
+                    if (found_in_this_cux) break;
                 }
-                if (item_matched) break;
             }
-            if (item_matched) continue;
+            if (found_in_this_cux) break;
         }
     }
 
