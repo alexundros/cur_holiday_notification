@@ -38,7 +38,7 @@ func print_elapsed_time(text string, start, end time.Time) {
 }
 
 func main_process(appdir, workdir string) {
-	xmlPath := getXMLFile()
+	xmlPath, _ := getXMLFile()
 	start := time.Now()
 
 	cfg := getConfig(appdir, workdir)
@@ -56,10 +56,10 @@ func main_process(appdir, workdir string) {
 	print_elapsed_time("Обработка завершена", start, end)
 }
 
-func getXMLFile() string {
+func getXMLFile() (string, error) {
 	if len(os.Args) > 1 {
 		if _, err := os.Stat(os.Args[1]); err == nil {
-			return filepath.Clean(os.Args[1])
+			return filepath.Abs(os.Args[1])
 		}
 		fmt.Printf("# %s не найден\n", os.Args[1])
 		os.Exit(1)
@@ -76,7 +76,7 @@ func getXMLFile() string {
 		fmt.Printf("# %s не найден\n", file)
 		os.Exit(1)
 	}
-	return filepath.Clean(file)
+	return filepath.Abs(file)
 }
 
 func getConfig(appdir, workdir string) *ini.File {
