@@ -2,6 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Read, Write};
 use std::path::{Path, PathBuf};
+use std::time::Instant;
 
 use anyhow::{Result, anyhow};
 use configparser::ini::Ini;
@@ -11,55 +12,48 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
-fn main() -> Result<()> {
-    let appdir = env::current_exe()?.parent().unwrap().to_path_buf();
-    let workdir = env::current_dir()?;
-    println!("# Директория приложения: {}", appdir.display());
-    println!("# Рабочая директория: {}", workdir.display());
-
-    let args: Vec<String> = env::args().collect();
-    let result = std::panic::catch_unwind(|| {
-        if let Err(err) = main_process(&args, &appdir, &workdir) {
-            eprintln!("# Программа прервана по ошибке: {:?}", err);
-        }
-    });
-
-    let f_mode = if args.len() > 2 {
-        args[2] == "true"
-    } else {
-        false
-    };
-
-    if !f_mode {
-        println!("# Нажмите <Enter> для выхода");
-        let _ = io::stdin().lock().lines().next();
-    }
-
-    if result.is_err() {
-        std::process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn main_process(args: &Vec<String>, appdir: &Path, workdir: &Path) -> Result<()> {
-    let xml = get_xml_file(args)?;
-    let start = std::time::Instant::now();
-    let config = load_config(appdir, workdir)?;
-
-    println!("# Обработка: {}", xml.display());
-
-    let result = process_xml(&config, &xml)?;
-    write_results(&result, workdir)?;
-
+fn print_elapsed_time(text: &str, start: Instant, end: Instant) {
     println!(
-        "# Обработка завершена: {:.6} сек.",
-        start.elapsed().as_secs_f64()
+        "# {}: {:.9} сек.",
+        text,
+        end.duration_since(start).as_secs_f64()
     );
+}
+
+fn config_items(config: &Ini, section: &str) -> Vec<(String, String)> {
+    if let Some(sections_map) = config.get_map() {
+        if let Some(section_map) = sections_map.get(section) {
+            return section_map
+                .iter()
+                .filter_map(|(k, v)| v.as_ref().map(|val| (k.clone(), val.clone())))
+                .collect();
+        }
+    }
+    vec![]
+}
+
+fn main_process(appdir: &Path, workdir: &Path) -> Result<()> {
+    let xml_path = get_xml_file()?;
+    let start = Instant::now();
+
+    let config = get_config(appdir, workdir)?;
+    let end_get_config = Instant::now();
+
+    let result = process_xml(&config, &xml_path)?;
+    let end_process_xml = Instant::now();
+
+    write_results(&result, workdir)?;
+    let end = Instant::now();
+
+    print_elapsed_time("* get config", start, end_get_config);
+    print_elapsed_time("* process xml", end_get_config, end_process_xml);
+    print_elapsed_time("* process results", end_process_xml, end);
+    print_elapsed_time("Обработка завершена", start, end);
     Ok(())
 }
 
-fn get_xml_file(args: &Vec<String>) -> Result<PathBuf> {
+fn get_xml_file() -> Result<PathBuf> {
+    let args: Vec<String> = env::args().collect();
     let file = if args.len() > 1 {
         args[1].clone()
     } else {
@@ -78,7 +72,7 @@ fn get_xml_file(args: &Vec<String>) -> Result<PathBuf> {
     }
 }
 
-fn load_config(appdir: &Path, workdir: &Path) -> Result<Ini> {
+fn get_config(appdir: &Path, workdir: &Path) -> Result<Ini> {
     let cfg_name = "cur_holiday_notification.cfg";
     let mut cfg_file = workdir.join(cfg_name);
     if !cfg_file.exists() {
@@ -102,20 +96,9 @@ fn load_config(appdir: &Path, workdir: &Path) -> Result<Ini> {
     Ok(config)
 }
 
-fn config_items(config: &Ini, section: &str) -> Vec<(String, String)> {
-    if let Some(sections_map) = config.get_map() {
-        if let Some(section_map) = sections_map.get(section) {
-            return section_map
-                .iter()
-                .filter_map(|(k, v)| v.as_ref().map(|val| (k.clone(), val.clone())))
-                .collect();
-        }
-    }
-
-    vec![]
-}
-
 fn process_xml(config: &Ini, xml_path: &Path) -> Result<Vec<(String, String)>> {
+    println!("# Обработка: {}", xml_path.display());
+
     let fhd = config
         .getbool("features", "HDay")
         .ok()
@@ -201,5 +184,36 @@ fn write_results(results: &[(String, String)], workdir: &Path) -> Result<()> {
     }
 
     println!("# Результат сохранен в файл: {}", out_path.display());
+    Ok(())
+}
+
+fn main() -> Result<()> {
+    let appdir = env::current_exe()?.parent().unwrap().to_path_buf();
+    let workdir = env::current_dir()?;
+    println!("# Директория приложения: {}", appdir.display());
+    println!("# Рабочая директория: {}", workdir.display());
+
+    let result = std::panic::catch_unwind(|| {
+        if let Err(err) = main_process(&appdir, &workdir) {
+            eprintln!("# Программа прервана по ошибке: {:?}", err);
+        }
+    });
+
+    let args: Vec<String> = env::args().collect();
+    let f_mode = if args.len() > 2 {
+        args[2] == "true"
+    } else {
+        false
+    };
+
+    if !f_mode {
+        println!("# Нажмите <Enter> для выхода");
+        let _ = io::stdin().lock().lines().next();
+    }
+
+    if result.is_err() {
+        std::process::exit(1);
+    }
+
     Ok(())
 }
