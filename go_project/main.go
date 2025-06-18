@@ -33,47 +33,27 @@ type Root struct {
 	CUX50Items []CUX50 `xml:"CUX50"`
 }
 
-func main() {
-	appdir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-	workdir, _ := os.Getwd()
+func print_elapsed_time(text string, start, end time.Time) {
+	fmt.Printf("# %s: %.9f сек.\n", text, end.Sub(start).Seconds())
+}
 
-	fmt.Printf("# Директория приложения: %s\n", appdir)
-	fmt.Printf("# Рабочая директория: %s\n", workdir)
-
-	var isError = true
-	var fMode = false
-	if len(os.Args) > 2 {
-		fMode = os.Args[2] == "true"
-	}
-
-	defer func() {
-		if !fMode {
-			fmt.Print("# Нажмите <Enter> для выхода")
-			bufio.NewReader(os.Stdin).ReadBytes('\n')
-		}
-		if isError {
-			os.Exit(1)
-		} else {
-			os.Exit(0)
-		}
-	}()
-
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("# Программа прервана по ошибке:", r)
-		}
-	}()
-
+func main_process(appdir, workdir string) {
 	xmlPath := getXMLFile()
 	start := time.Now()
+
 	cfg := getConfig(appdir, workdir)
+	end_get_config := time.Now()
 
-	fmt.Printf("# Обработка: %s\n", xmlPath)
 	result := processXML(cfg, xmlPath)
-	writeResults(result, workdir)
-	fmt.Printf("# Обработка завершена: %.6f сек.\n", time.Since(start).Seconds())
+	end_process_xml := time.Now()
 
-	isError = false
+	writeResults(result, workdir)
+	end := time.Now()
+
+	print_elapsed_time("* get config", start, end_get_config)
+	print_elapsed_time("* process xml", end_get_config, end_process_xml)
+	print_elapsed_time("* process results", end_process_xml, end)
+	print_elapsed_time("Обработка завершена", start, end)
 }
 
 func getXMLFile() string {
@@ -119,6 +99,8 @@ func getConfig(appdir, workdir string) *ini.File {
 }
 
 func processXML(cfg *ini.File, xmlPath string) [][2]string {
+	fmt.Printf("# Обработка: %s\n", xmlPath)
+
 	file, err := os.Open(xmlPath)
 	if err != nil {
 		panic(err)
@@ -129,14 +111,12 @@ func processXML(cfg *ini.File, xmlPath string) [][2]string {
 	hDay := features.Key("HDay").MustBool(false)
 	items := cfg.Section("items").KeysHash()
 
-	// Преобразуем из windows-1251 в utf-8
 	decoder := transform.NewReader(file, charmap.Windows1251.NewDecoder())
 	data, err := io.ReadAll(decoder)
 	if err != nil {
 		panic(err)
 	}
 
-	// Удалим объявление кодировки
 	dataStr := strings.Replace(string(data), `encoding="windows-1251"`, ``, 1)
 	data = []byte(dataStr)
 
@@ -191,4 +171,38 @@ func writeResults(results [][2]string, workdir string) {
 	}
 	writer.Flush()
 	fmt.Printf("# Результат сохранен в файл: %s\n", outFile)
+}
+
+func main() {
+	appdir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	workdir, _ := os.Getwd()
+	fmt.Printf("# Директория приложения: %s\n", appdir)
+	fmt.Printf("# Рабочая директория: %s\n", workdir)
+
+	var isError = true
+	var fMode = false
+	if len(os.Args) > 2 {
+		fMode = os.Args[2] == "true"
+	}
+
+	defer func() {
+		if !fMode {
+			fmt.Print("# Нажмите <Enter> для выхода")
+			bufio.NewReader(os.Stdin).ReadBytes('\n')
+		}
+		if isError {
+			os.Exit(1)
+		} else {
+			os.Exit(0)
+		}
+	}()
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("# Программа прервана по ошибке:", r)
+		}
+	}()
+
+	main_process(appdir, workdir)
+	isError = false
 }
