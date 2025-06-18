@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "# Конфиг не найден\n");
         return 2;
     }
-    snprintf(text_buf, 1024, "# Используем конфиг: %ss\n", config_path);
+    snprintf(text_buf, 1024, "# Используем конфиг: %s\n", config_path);
     fputs(text_buf, stdout);
 
     config_t config;
