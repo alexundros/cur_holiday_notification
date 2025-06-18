@@ -22,7 +22,7 @@
                 "cwd": "${workspaceFolder}"
             },
             "args": [
-                "cx_setup___main.py",
+                "cx_setup_build.py",
                 "build",
                 "--compiler=mingw32",
             ],
