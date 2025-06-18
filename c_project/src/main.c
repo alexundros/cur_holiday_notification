@@ -200,7 +200,7 @@ int main(int argc, char* argv[]) {
     free(config_path);
     free(xml_path);
 
-    diff_print(text_buf, "* config", &ts_config_s, &ts_config_e);
+    diff_print(text_buf, "* get config", &ts_config_s, &ts_config_e);
     diff_print(text_buf, "* process xml", &ts_config_e, &ts_xml_e);
     diff_print(text_buf, "* process results", &ts_xml_e, &ts_out_e);
     diff_print(text_buf, "Обработка завершена", &ts_start, &ts_end);
