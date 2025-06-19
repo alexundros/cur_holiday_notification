@@ -86,15 +86,12 @@ int process_xml(const char* xml_path, const config_t* config, result_list_t* rl)
                     for (int i = 0; i < config->items.count; i++) {
                         if (strcmp((const char*)ssn, config->items.list[i].key) == 0) {
                             append_result(rl, config->items.list[i].value, report_date);
-                            found_in_this_cux = true;
                             break;
                         }
                     }
                     xmlFree(ssn);
-                    if (found_in_this_cux) break;
                 }
             }
-            if (found_in_this_cux) break;
         }
     }
 
