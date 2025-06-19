@@ -97,7 +97,9 @@ fn get_config(appdir: &Path, workdir: &Path) -> Result<Ini> {
 }
 
 fn process_xml(config: &Ini, xml_path: &Path) -> Result<Vec<(String, String)>> {
-    println!("# Обработка: {}", xml_path.display());
+    let xml_path = xml_path.to_string_lossy();
+    let xml_path = xml_path.strip_prefix(r"\\?\").unwrap_or(&xml_path);
+    println!("# Обработка: {}", xml_path);
 
     let fhd = config
         .getbool("features", "HDay")
