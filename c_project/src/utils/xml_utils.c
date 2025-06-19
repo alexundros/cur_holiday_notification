@@ -55,28 +55,20 @@ int process_xml(const char* xml_path, const config_t* config, result_list_t* rl)
         report_date[sizeof(report_date) - 1] = '\0';
         xmlFree(attr_date);
 
-        bool found_in_this_cux = false;
+        for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
+            if (grp->type != XML_ELEMENT_NODE || xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
 
-        if (config->features.HDay) {
-            for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
-                if (grp->type != XML_ELEMENT_NODE || xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
-
+            if (config->features.HDay) {
                 xmlChar* tg = xmlGetProp(grp, (const xmlChar*)"TradeGroup");
                 if (tg) {
                     if (xmlStrcmp(tg, (const xmlChar*)"H") == 0) {
                         append_result(rl, "HDay", report_date);
                         xmlFree(tg);
-                        found_in_this_cux = true;
                         break;
                     }
                     xmlFree(tg);
                 }
             }
-            if (found_in_this_cux) continue;
-        }
-
-        for (xmlNodePtr grp = cux->children; grp; grp = grp->next) {
-            if (grp->type != XML_ELEMENT_NODE || xmlStrcmp(grp->name, (const xmlChar*)"GROUP") != 0) continue;
 
             for (xmlNodePtr sec = grp->children; sec; sec = sec->next) {
                 if (sec->type != XML_ELEMENT_NODE || xmlStrcmp(sec->name, (const xmlChar*)"SECURITY") != 0) continue;
