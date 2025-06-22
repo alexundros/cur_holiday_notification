@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "ini_utils.h"
+#include "../ini/ini_utils.h"
 
 typedef struct {
     char code[128];
@@ -22,6 +22,6 @@ void append_result(result_list_t* rl, const char* code, const char* date);
 
 void free_result_list(result_list_t* rl);
 
-int process_xml(const char* xml_path, const config_t* config, result_list_t* rl);
+int process_xml(char* text_buf, const char* xml_path, const config_t* config, result_list_t* rl);
 
 #endif  // XML_UTILS_H

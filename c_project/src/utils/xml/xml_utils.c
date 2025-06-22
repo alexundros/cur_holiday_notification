@@ -33,7 +33,12 @@ void free_result_list(result_list_t* rl) {
     rl->capacity = 0;
 }
 
-int process_xml(const char* xml_path, const config_t* config, result_list_t* rl) {
+int process_xml(char* text_buf, const char* xml_path, const config_t* config, result_list_t* rl) {
+    snprintf(text_buf, 1024, "# Обработка: %s\n", xml_path);
+    fputs(text_buf, stdout);
+
+    init_result_list(rl);
+
     xmlInitParser();
     xmlDocPtr doc = xmlReadFile(xml_path, NULL, XML_PARSE_NOWARNING | XML_PARSE_NOERROR);
     if (doc == NULL) return 1;

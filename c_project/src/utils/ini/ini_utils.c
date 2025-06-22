@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ini/ini.h"
+#include "ini_h/ini.h"
 
 void config_items_init(config_list_t* items) {
     items->count = 0;

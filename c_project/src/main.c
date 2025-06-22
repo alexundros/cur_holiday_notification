@@ -14,12 +14,12 @@
 #define MAX_PATH 1024
 #endif
 
-#include "utils/ini_utils.h"
-#include "utils/xml_utils.h"
+#include "utils/ini/ini_utils.h"
+#include "utils/xml/xml_utils.h"
 
 #ifdef _WIN32
 
-char* get_appdir() {
+static inline char* get_app_dir() {
     static char path[MAX_PATH];
     DWORD len = GetModuleFileNameA(NULL, path, sizeof(path));
     if (len == 0 || len >= sizeof(path)) return NULL;
@@ -32,7 +32,7 @@ char* get_appdir() {
     return path;
 }
 
-int get_full_path(const char* relative, char* full, size_t size) {
+static inline int get_full_path(const char* relative, char* full, size_t size) {
     if (GetFullPathName(relative, size, full, NULL) == 0) {
         return -1;
     }
@@ -41,7 +41,7 @@ int get_full_path(const char* relative, char* full, size_t size) {
 
 #else
 
-char* get_appdir() {
+static inline char* get_app_dir() {
     static char path[MAX_PATH];
     ssize_t len = readlink("/proc/self/exe", path, sizeof(path) - 1);
     if (len == -1) return NULL;
@@ -51,7 +51,7 @@ char* get_appdir() {
     return path;
 }
 
-int get_full_path(const char* relative, char* full, size_t size) {
+static inline int get_full_path(const char* relative, char* full, size_t size) {
     if (realpath(relative, full) == NULL) {
         return -1;
     }
@@ -60,24 +60,24 @@ int get_full_path(const char* relative, char* full, size_t size) {
 
 #endif
 
+static inline int file_exists(const char* path) {
+    struct stat buf;
+    return (stat(path, &buf) == 0);
+}
+
 static inline struct timespec get_timespec() {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return ts;
 }
 
-static inline void diff_print(char* text_buf, char* text, const struct timespec* a, const struct timespec* b) {
-    long diff = (b->tv_sec - a->tv_sec) * 1000000000L + (b->tv_nsec - a->tv_nsec);
-    snprintf(text_buf, 1024, "# %s: %.9f сек.\n", text, diff / 1e9);
-    fputs(text_buf, stdout);
+void print_elapsed_time(char* buf, char* text, const struct timespec* start, const struct timespec* end) {
+    long dts = (end->tv_sec - start->tv_sec) * 1e9 + (end->tv_nsec - start->tv_nsec);
+    snprintf(buf, 1024, "# %s: %.9f сек.\n", text, dts / 1e9);
+    fputs(buf, stdout);
 }
 
-static int file_exists(const char* path) {
-    struct stat buffer;
-    return (stat(path, &buffer) == 0);
-}
-
-static char* get_xml_file(int argc, char* argv[]) {
+char* get_xml_file(int argc, char* argv[]) {
     char path[MAX_PATH];
     if (argc > 1) {
         if (!file_exists(argv[1])) {
@@ -105,99 +105,42 @@ static char* get_xml_file(int argc, char* argv[]) {
     }
 }
 
-static char* get_config_path(const char* appdir, const char* workdir) {
+int get_config(config_t* config, char* text_buf, const char* appdir, const char* workdir) {
     const char* name = "cur_holiday_notification.cfg";
-    char buf[MAX_PATH];
-    snprintf(buf, MAX_PATH, "%s%c%s", workdir, PATH_SEP, name);
-    if (file_exists(buf)) {
-        return strdup(buf);
+    char path[MAX_PATH];
+    snprintf(path, MAX_PATH, "%s%c%s", workdir, PATH_SEP, name);
+    if (!file_exists(path)) {
+        snprintf(path, MAX_PATH, "%s%c%s", appdir, PATH_SEP, name);
     }
-    snprintf(buf, MAX_PATH, "%s%c%s", appdir, PATH_SEP, name);
-    if (file_exists(buf)) {
-        return strdup(buf);
-    }
-    return NULL;
-}
-
-int main(int argc, char* argv[]) {
-#ifdef _WIN32
-    if (!SetConsoleOutputCP(65001)) {
-        printf("Failed to set console code page: %lu\n", GetLastError());
+    if (!file_exists(path)) {
+        fprintf(stderr, "# Конфиг не найден\n");
         return 1;
     }
-#endif
 
-    struct timespec ts_start = get_timespec();
-
-    setvbuf(stdout, NULL, _IOFBF, 8192);
-
-    char text_buf[1024];
-
-    char* appdir = get_appdir();
-    if (!appdir) return 1;
-    char workdir_buf[1024];
-    if (!getcwd(workdir_buf, sizeof(workdir_buf))) return 1;
-    char* workdir = strdup(workdir_buf);
-
-    snprintf(text_buf, 1024, "# Директория приложения: %s\n", appdir);
+    snprintf(text_buf, 1024, "# Используем конфиг: %s\n", path);
     fputs(text_buf, stdout);
 
-    snprintf(text_buf, 1024, "# Рабочая директория: %s\n", workdir);
-    fputs(text_buf, stdout);
-
-    // Конфигурация
-
-    struct timespec ts_config_s = get_timespec();
-
-    char* config_path = get_config_path(appdir, workdir);
-    if (!config_path) {
-        fprintf(stderr, "# Конфиг не найден\n");
+    if (!init_config(config, path)) {
+        fprintf(stderr, "# Не удалось загрузить конфиг %s\n", path);
         return 2;
     }
-    snprintf(text_buf, 1024, "# Используем конфиг: %s\n", config_path);
-    fputs(text_buf, stdout);
+    return 0;
+}
 
-    config_t config;
-    if (!init_config(&config, config_path)) {
-        fprintf(stderr, "# Не удалось загрузить конфиг %s\n", config_path);
-        return 3;
-    }
-
-    struct timespec ts_config_e = get_timespec();
-
-    // Обработка XML
-
-    char* xml_path = get_xml_file(argc, argv);
-    if (!xml_path) {
-        fprintf(stderr, "# Ошибка: XML файл не указан\n");
-        return 4;
-    }
-    snprintf(text_buf, 1024, "# Обработка: %s\n", xml_path);
-    fputs(text_buf, stdout);
-
-    result_list_t results;
-    init_result_list(&results);
-    if (process_xml(xml_path, &config, &results) > 0) {
-        fprintf(stderr, "# Ошибка при обработке XML %s\n", xml_path);
-        return 5;
-    }
-
-    struct timespec ts_xml_e = get_timespec();
-
-    // Вывод результата
-
-    char out_path[MAX_PATH];
-    snprintf(out_path, MAX_PATH, "%s%cc_project.out", workdir, PATH_SEP);
-    FILE* fo = fopen(out_path, "w");
+int write_results(char* text_buf, const char* workdir, const result_list_t* results) {
+    char path[MAX_PATH];
+    snprintf(path, MAX_PATH, "%s%cc_project.out", workdir, PATH_SEP);
+    FILE* fo = fopen(path, "w");
     if (!fo) {
-        fprintf(stderr, "# Не могу создать/записать файл результата: %s\n", out_path);
-        return 6;
+        fprintf(stderr, "# Не могу создать/записать файл результата: %s\n", path);
+        return 1;
     }
-    if (results.count > 0) {
+
+    if (results->count) {
         fputs("# Результат:\n", stdout);
-        for (int i = 0; i < results.count; i++) {
-            char* code = results.items[i].code;
-            char* date = results.items[i].date;
+        for (int i = 0; i < results->count; i++) {
+            char* code = results->items[i].code;
+            char* date = results->items[i].date;
             snprintf(text_buf, 1024, "%s = %s\n", code, date);
             fputs(text_buf, fo);
             fputs(text_buf, stdout);
@@ -207,23 +150,69 @@ int main(int argc, char* argv[]) {
     }
     fclose(fo);
 
-    snprintf(text_buf, 1024, "# Результат сохранен в файл: %s\n", out_path);
+    snprintf(text_buf, 1024, "# Результат сохранен в файл: %s\n", path);
+    fputs(text_buf, stdout);
+    return 0;
+}
+
+int main_process(int argc, char* argv[], char* text_buf, const char* appdir, const char* workdir) {
+    char* xml_path = get_xml_file(argc, argv);
+    if (!xml_path) {
+        return 1;
+    }
+    struct timespec start = get_timespec();
+
+    config_t config;
+    if (get_config(&config, text_buf, appdir, workdir)) {
+        return 2;
+    }
+    struct timespec end_get_config = get_timespec();
+
+    result_list_t results;
+    if (process_xml(text_buf, xml_path, &config, &results)) {
+        fprintf(stderr, "# Ошибка при обработке XML %s\n", xml_path);
+        return 3;
+    }
+    struct timespec end_process_xml = get_timespec();
+
+    if (write_results(text_buf, workdir, &results)) {
+        return 4;
+    }
+    struct timespec end = get_timespec();
+
+    print_elapsed_time(text_buf, "* get config", &start, &end_get_config);
+    print_elapsed_time(text_buf, "* process xml", &end_get_config, &end_process_xml);
+    print_elapsed_time(text_buf, "* process results", &end_process_xml, &end);
+    print_elapsed_time(text_buf, "Обработка завершена", &start, &end);
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
+#ifdef _WIN32
+    if (!SetConsoleOutputCP(65001)) {
+        printf("Failed to set console code page: %lu\n", GetLastError());
+        return 1;
+    }
+#endif
+    setvbuf(stdout, NULL, _IOFBF, 8192);
+
+    char text_buf[1024];
+    char* appdir = get_app_dir();
+    if (!appdir) return 1;
+
+    char workdir_buf[1024];
+    if (!getcwd(workdir_buf, sizeof(workdir_buf))) return 2;
+    char* workdir = strdup(workdir_buf);
+
+    snprintf(text_buf, 1024, "# Директория приложения: %s\n", appdir);
+    fputs(text_buf, stdout);
+    snprintf(text_buf, 1024, "# Рабочая директория: %s\n", workdir);
     fputs(text_buf, stdout);
 
-    struct timespec ts_out_e = get_timespec();
-
-    // Завершение
-
-    struct timespec ts_end = get_timespec();
-
-    free_result_list(&results);
-    free(config_path);
-    free(xml_path);
-
-    diff_print(text_buf, "* get config", &ts_config_s, &ts_config_e);
-    diff_print(text_buf, "* process xml", &ts_config_e, &ts_xml_e);
-    diff_print(text_buf, "* process results", &ts_xml_e, &ts_out_e);
-    diff_print(text_buf, "Обработка завершена", &ts_start, &ts_end);
+    if (main_process(argc, argv, text_buf, appdir, workdir)) {
+        fprintf(stderr, "# Программа прервана по ошибке\n");
+        return 3;
+    }
 
     fflush(stdout);
 
@@ -231,6 +220,5 @@ int main(int argc, char* argv[]) {
         fputs("# Нажмите <Enter> для выхода", stdout);
         getchar();
     }
-
     return 0;
 }
