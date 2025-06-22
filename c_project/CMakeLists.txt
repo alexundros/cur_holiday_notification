@@ -10,12 +10,12 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 add_executable(c_project
-        src/utils/ini/ini.c
-        src/utils/ini/ini.h
-        src/utils/ini_utils.c
-        src/utils/ini_utils.h
-        src/utils/xml_utils.c
-        src/utils/xml_utils.h
+        src/utils/ini/ini_h/ini.c
+        src/utils/ini/ini_h/ini.h
+        src/utils/ini/ini_utils.c
+        src/utils/ini/ini_utils.h
+        src/utils/xml/xml_utils.c
+        src/utils/xml/xml_utils.h
         src/main.c)
 
 target_link_libraries(c_project ${LIBXML2_LIBRARIES})
